@@ -440,4 +440,141 @@ class FlightController extends BaseController
             );
         }
     }
+    //compare enter trafic flight/api11?token=123&city1=Stokholms&city2=London&fdate=2013-04-05_20:46&tdate=2022-04-16_20:46
+    public function api11()
+    {
+        $strErrorDesc = '';
+        $requestMethod = $_SERVER["REQUEST_METHOD"];
+        $arrQueryStringParams = $this->getQueryStringParams();
+        if (strtoupper($requestMethod) == 'GET') 
+        {
+            try {
+                $flightModel = new FlightModel();
+                $airport = -1;
+                $city1 = (isset($arrQueryStringParams['city1']))?$arrQueryStringParams['city1']:-1;
+                $city2 = (isset($arrQueryStringParams['city2']))?$arrQueryStringParams['city2']:-1;
+                $fdate = (isset($arrQueryStringParams['fdate']))?$arrQueryStringParams['fdate']:-1;
+                $tdate = (isset($arrQueryStringParams['tdate']))?$arrQueryStringParams['tdate']:-1;
+                $token = (isset($arrQueryStringParams['token']))?$arrQueryStringParams['token']:-1;
+                $arrUsers = $flightModel->compareEnterTrafic($token,$city1,$city2,$fdate,$tdate);
+                $responseData = json_encode($arrUsers);
+            } 
+            catch (Error $e) 
+            {
+                $strErrorDesc = $e->getMessage().'Something went wrong! Please contact support.';
+                $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
+            }
+        } 
+        else 
+        {
+            $strErrorDesc = 'Method not supported';
+            $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
+        }
+ 
+        // send output
+        if (!$strErrorDesc) 
+        {
+            $this->sendOutput(
+                $responseData,
+                array('Content-Type: application/json', 'HTTP/1.1 200 OK')
+            );
+        } 
+        else 
+        {
+            $this->sendOutput(json_encode(array('error' => $strErrorDesc)), 
+                array('Content-Type: application/json', $strErrorHeader)
+            );
+        }
+    }
+    //compare reserve price flight/api12?token=123&carrier1=Stokholms&carrier2=London&fdate=2013-04-05_20:46&tdate=2022-04-16_20:46
+    public function api12()
+    {
+        $strErrorDesc = '';
+        $requestMethod = $_SERVER["REQUEST_METHOD"];
+        $arrQueryStringParams = $this->getQueryStringParams();
+        if (strtoupper($requestMethod) == 'GET') 
+        {
+            try {
+                $flightModel = new FlightModel();
+                $airport = -1;
+                $carrier1 = (isset($arrQueryStringParams['carrier1']))?$arrQueryStringParams['carrier1']:-1;
+                $carrier2 = (isset($arrQueryStringParams['carrier2']))?$arrQueryStringParams['carrier2']:-1;
+                $fdate = (isset($arrQueryStringParams['fdate']))?$arrQueryStringParams['fdate']:-1;
+                $tdate = (isset($arrQueryStringParams['tdate']))?$arrQueryStringParams['tdate']:-1;
+                $token = (isset($arrQueryStringParams['token']))?$arrQueryStringParams['token']:-1;
+                $arrUsers = $flightModel->compareEncome($token,$carrier1,$carrier2,$fdate,$tdate);
+                $responseData = json_encode($arrUsers);
+            } 
+            catch (Error $e) 
+            {
+                $strErrorDesc = $e->getMessage().'Something went wrong! Please contact support.';
+                $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
+            }
+        } 
+        else 
+        {
+            $strErrorDesc = 'Method not supported';
+            $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
+        }
+ 
+        // send output
+        if (!$strErrorDesc) 
+        {
+            $this->sendOutput(
+                $responseData,
+                array('Content-Type: application/json', 'HTTP/1.1 200 OK')
+            );
+        } 
+        else 
+        {
+            $this->sendOutput(json_encode(array('error' => $strErrorDesc)), 
+                array('Content-Type: application/json', $strErrorHeader)
+            );
+        }
+    }
+    //compare plan-typ flight/api13?token=123&planTyp=ATR-72&fdate=2013-04-05_20:46&tdate=2022-04-16_20:46
+    public function api13()
+    {
+        $strErrorDesc = '';
+        $requestMethod = $_SERVER["REQUEST_METHOD"];
+        $arrQueryStringParams = $this->getQueryStringParams();
+        if (strtoupper($requestMethod) == 'GET') 
+        {
+            try {
+                $flightModel = new FlightModel();
+                $airport = -1;
+                $planTyp = (isset($arrQueryStringParams['planTyp']))?$arrQueryStringParams['planTyp']:-1;
+                $fdate = (isset($arrQueryStringParams['fdate']))?$arrQueryStringParams['fdate']:-1;
+                $tdate = (isset($arrQueryStringParams['tdate']))?$arrQueryStringParams['tdate']:-1;
+                $token = (isset($arrQueryStringParams['token']))?$arrQueryStringParams['token']:-1;
+                $arrUsers = $flightModel->comparePlan($token,$planTyp,$fdate,$tdate);
+                $responseData = json_encode($arrUsers);
+            } 
+            catch (Error $e) 
+            {
+                $strErrorDesc = $e->getMessage().'Something went wrong! Please contact support.';
+                $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
+            }
+        } 
+        else 
+        {
+            $strErrorDesc = 'Method not supported';
+            $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
+        }
+ 
+        // send output
+        if (!$strErrorDesc) 
+        {
+            $this->sendOutput(
+                $responseData,
+                array('Content-Type: application/json', 'HTTP/1.1 200 OK')
+            );
+        } 
+        else 
+        {
+            $this->sendOutput(json_encode(array('error' => $strErrorDesc)), 
+                array('Content-Type: application/json', $strErrorHeader)
+            );
+        }
+    }
 }

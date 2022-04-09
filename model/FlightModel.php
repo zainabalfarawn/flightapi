@@ -178,4 +178,77 @@ class FlightModel extends Database
             return $msg;
         }
     }
+    public function compareEnterTrafic($token,$city1,$city2,$fdate,$tdate)
+    {
+        $userInfo = array();
+        $tmp = array();
+        $userInfo = $this->select("select * from `users` where `user_token` = '$token' ",$tmp,2);
+        if (count($userInfo) > 0)
+        {
+            $city1 = $this->select("select COUNT(`id`) as `cid` from `flight` where `dest_city` = '$city1' and `datetime` BETWEEN '$fdate' AND '$tdate'",$tmp,1);
+            $city1Trafic = $city1[0]['cid'];
+            $city2 = $this->select("select COUNT(`id`) as `cid` from `flight` where `dest_city` = '$city2' and `datetime` BETWEEN '$fdate' AND '$tdate'",$tmp,1);
+            $city2Trafic = $city2[0]['cid'];
+            $userInfo = [$city1Trafic,$city2Trafic];
+            return $userInfo;
+        }
+        else
+        {
+            return $userInfo;
+        }
+    }
+    public function compareEncome($token,$carrier1,$carrier2,$fdate,$tdate)
+    {
+        $userInfo = array();
+        $tmp = array();
+        $userInfo = $this->select("select * from `users` where `user_token` = '$token' ",$tmp,2);
+        if (count($userInfo) > 0)
+        {
+            $priceCnt1 = 0;
+            $flightLists = $this->select("select `id`,`price` from `flight` where `carrier` = '$carrier1' and `datetime` BETWEEN '$fdate' AND '$tdate'",$tmp,1);
+            for($i=0;$i<(count($flightLists));$i++)
+            {
+                $id = $flightLists[$i]['id'];
+                $price = $flightLists[$i]['price'];
+                $flightRes = $this->select("select `id` from `reserve` where `flight_id` = '$id'",$tmp,1);
+                for($j=0;$j<(count($flightRes));$j++)
+                {
+                    $priceCnt1 +=$price;
+                }
+            }
+            $priceCnt2 = 0;
+            $flightLists = $this->select("select `id`,`price` from `flight` where `carrier` = '$carrier2' and `datetime` BETWEEN '$fdate' AND '$tdate'",$tmp,1);
+            for($i=0;$i<(count($flightLists));$i++)
+            {
+                $id = $flightLists[$i]['id'];
+                $price = $flightLists[$i]['price'];
+                $flightRes = $this->select("select `id` from `reserve` where `flight_id` = '$id'",$tmp,1);
+                for($j=0;$j<(count($flightRes));$j++)
+                {
+                    $priceCnt2 +=$price;
+                }
+            }
+            $userInfo = [$priceCnt1,$priceCnt2];
+            return $userInfo;
+        }
+        else
+        {
+            return $userInfo;
+        }
+    }
+    public function comparePlan($token,$planTyp,$fdate,$tdate)
+    {
+        $userInfo = array();
+        $tmp = array();
+        $userInfo = $this->select("select * from `users` where `user_token` = '$token' ",$tmp,2);
+        if (count($userInfo) > 0)
+        {
+            $priceCnt1 = 0;
+            return $this->select("select count(`id`) as `cid` from `flight` where `plane_type` = '$planTyp' and `datetime` BETWEEN '$fdate' AND '$tdate'",$tmp,1);
+        }
+        else
+        {
+            return $userInfo;
+        }
+    }
 }
